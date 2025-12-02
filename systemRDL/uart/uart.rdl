@@ -1,312 +1,3 @@
-reg RBR{
-    name = "Receiver Buffer Register";
-    desc = "This register can be accessed only when the DLAB bit (LCR[7]) is cleared.";
-
-    field {
-        desc = "This register contains the data byte received on the serial input port (sin) in UART mode or the serial infrared input (sir_in) in infrared mode. The data in this register is valid only if the Data Ready (DR) bit in the Line status Register (LSR) is set.";
-        hw = r;
-        sw = r;
-        reset = 0x0;
-    } RBR[7:0];
-
-};
-
-
-reg IER{
-    name = "Interrupt Enable Register";
-    desc = "This register can be accessed only when the DLAB bit (LCR[7]) is cleared.";
-
-    field {
-        desc = "Programmable THRE Interrupt Mode Enable. Writeable only when THRE_MODE_USER == Enabled, always readable. This is used to enable/disable the generation of THRE Interrupt.";
-        hw = rw; 
-        sw = rw;
-        reset = 0x0;
-    } PTIME[7:7];
-
-    field {
-        desc = "IER 6to5 Reserved Bits read as zero(0)";
-        hw = r; sw = r;
-        reset = 0x0;
-    } RSVD_IER_6to5[6:5];
-
-    field { } ELCOLR[4:4];
-    field { } EDSSI[3:3];
-    field { } ELSI[2:2];
-    field { } ETBEI[1:1];
-    field { } ERBFI[0:0];
-};
-
-// reg DLH{
-//     name = "Divisor Latch High";
-// };
-
-reg IIR{
-    name = "Interrupt Identification Register";
-
-    field {} FIFOSET[7:6];
-    field {} IID[3:0];
-};
-
-// reg FCR{
-//     name = "FIFO Control Register";
-// };
-
-reg LCR{
-    name = "Line Control Register";
-
-    field {} DLAB[7:7];
-    field {} BC[6:6];
-    field {} SP[5:5];
-    field {} EPS[4:4];
-    field {} PEN[3:3];
-    field {} STOP[2:2];
-    field {} DLS[1:0];
-};
-
-reg MCR{
-    name = "Modem Control Register";
-
-    field {} SIRE[6:6];
-    field {} AFCE[5:5];
-    field {} LoopBack[4:4];
-    field {} OUT2[3:3];
-    field {} OUT1[2:2];
-    field {} RTS[1:1];
-    field {} DTR[0:0];
-};
-
-reg LSR{
-    name = "Line Status Register";
-
-    field {} ADDR_RCVD[8:8];
-    field {} RFE[7:7];
-    field {} TEMT[6:6];
-    field {} THRE[5:5];
-    field {} BI[4:4];
-    field {} FE[3:3];
-    field {} PE[2:2];
-    field {} OE[1:1];
-    field {} DR[0:0];
-};
-
-reg MSR{
-    name = "Modem Status Register";
-
-    field {} DCD[7:7];
-    field {} RI[6:6];
-    field {} DSR[5:5];
-    field {} CTS[4:4];
-    field {} DDCD[3:3];
-    field {} TERI[2:2];
-    field {} DDSR[1:1];
-    field {} DCTS[0:0];
-};
-
-reg SCR{
-    name = "Scratch Register";
-
-    field {} SCR[7:0];
-};
-
-reg LPDLL{
-    name = "Low Power Divisor Latch Low";
-
-    field {} LPDLL[7:0];
-};
-
-reg LPDLH{
-    name = "Low Power Divisor Latch High";
-
-    field {} LPDLH[7:0];
-};
-
-reg SRBRn{
-    name = "Shadow Receiver Buffer Register";
-
-    field {} SRBRn[7:0];
-};
-
-// reg STHRn{
-//     name = "Shadow Transmitter Holding Register";
-// };
-
-reg FAR{
-    name = "FIFO Access Register";
-
-    field {} FAR[0:0];
-};
-
-reg TFR{
-    name = "Transmit FIFO Read Register";
-
-    field {} TFR[7:0];
-};
-
-reg RFW{
-    name = "Receive FIFO Write Register";
-
-    field {} RFFE[9:9];
-    field {} RFPE[8:8];
-    field {} RFWD[7:0];
-};
-
-reg USR{
-    name = "UART Status Register";
-
-    field {} RFF[4:4];
-    field {} RFNE[3:3];
-    field {} TFE[2:2];
-    field {} TFNF[1:1];
-    field {} BUSY[0:0];
-};
-
-reg TFL{
-    name = "Transmit FIFO Level Register";
-
-    field {} tfl[7:0];
-};
-
-reg RFL{
-    name = "Receive FIFO Level Register";
-    field {} rfl[7:0];
-};
-
-reg SRR{
-    name = "Software Reset Register";
-    field {} RFR[1:1];
-    field {} UR[0:0];
-};
-
-reg SRTS{
-    name = "Shadow Request to Send Register";
-    field {} SRTS[0:0];
-};
-
-reg SBCR{
-    name = "Shadow Break Control Register";
-    field {} SBCB[0:0];
-};
-
-reg SDMAM{
-    name = "Shadow DMA Mode Register";
-    field {} SDMAM[0:0];
-};
-
-reg SFE{
-    name = "Shadow FIFO Enable Register";
-    field {} SFE[0:0];
-};
-
-reg SRT{
-    name = "Shadow RCVR Trigger Register";
-    field {} SRT[1:0];
-};
-
-reg STET{
-    name = "Shadow TX Empty Trigger Register";
-    field {} STET[1:0];
-};
-
-reg HTX{
-    name = "Halt TX Register";
-    field {} HTX[0:0];
-};
-
-reg DMASA{
-    name = "DMA Software Acknowledge Register";
-    field {} DMASA[0:0];
-};
-
-reg TCR{
-    name = "Transceiver Control Register";
-    field {} XFER_MODE[4:3];
-    field {} DE_POL[2:2];
-    field {} RE_POL[1:1];
-    field {} RS485_EN[0:0];
-};
-
-reg DE_EN{
-    name = "Driver Output Enable Register";
-    field {} DE_Enable[0:0];
-};
-
-reg RE_EN{
-    name = "Receiver Output Enable Register";
-    field {} RE_Enable[0:0];
-};
-
-reg DET{
-    name = "Driver Output Enable Timing Register";
-    field {} DE_Deassertion_Time[23:16];
-    field {} DE_Assertion_Time[7:0];
-};
-
-reg TAT{
-    name = "Turn Around Timing Register";
-    field {} RE_to_DE[31:16];
-    field {} DE_to_RE[15:0];
-};
-
-reg DLF{
-    name = "Divisor Latch Fraction Register";
-    field {} DLF[3:0];
-};
-
-reg RAR{
-    name = "Receive Address Register";
-    field {} RAR[7:0];
-};
-
-reg TAR{
-    name = "Transmit Address Register";
-    field {} TAR[7:0];
-};
-
-reg LCR_EXT{
-    name = "Line Extended Control Register";
-    field {} TRANSMIT_MODE[3:3];
-    field {} SEND_ADDR[2:2];
-    field {} ADDR_MATCH[1:1];
-    field {} DLS_E[0:0];
-};
-
-reg UART_PROT_LEVEL{
-    name = "UART Protection Level Register";
-    field {} UART_PROT_LEVEL[2:0];
-};
-
-reg REG_TIMEOUT_RST{
-    name = "Register Timeout Counter Reset Value";
-    field {
-        desc = "TODO: reg width";
-    } REG_TIMEOUT_RST[7:0];
-};
-
-reg CPR{
-    name = "Component Parameter Register";
-    field {} FIFO_MODE[23:16];
-    field {} DMA_EXTRA[13:13];
-    field {} UART_ADD_ENCODED_PARAMS[12:12];
-    field {} SHADOW[11:11];
-    field {} FIFO_STAT[10:10];
-    field {} FIFO_ACCESS[9:9];
-    field {} ADDITIONAL_FEAT[8:8];
-    field {} SIR_LP_MODE[7:7];
-    field {} SIR_MODE[6:6];
-    field {} THRE_MODE[5:5];
-    field {} AFCE_MODE[4:4];
-    field {} APB_DATA_WIDTH[1:0];
-};
-
-reg UCV{
-    name = "UART Component Version Register";
-    field {} UART_Component_Version[31:0];
-};
-
-reg CTR{
-    name = "Component Type Register";
-    field {} Peripheral_ID[31:0];
-};
 
 
 addrmap UART_ADDRMAP{
@@ -317,6 +8,324 @@ addrmap UART_ADDRMAP{
     default hw = rw;
     default reset = 0x0;
     
+
+    reg RBR{
+        name = "Receiver Buffer Register";
+        desc = "This register can be accessed only when the DLAB bit (LCR[7]) is cleared.";
+
+        field {
+            desc = "This register contains the data byte received on the serial input port (sin) in UART mode or the serial infrared input (sir_in) in infrared mode. The data in this register is valid only if the Data Ready (DR) bit in the Line status Register (LSR) is set.";
+            hw = r;
+            sw = r;
+            reset = 0x0;
+        } RBR[7:0];
+    };
+
+
+    reg IER{
+        name = "Interrupt Enable Register";
+        desc = "This register can be accessed only when the DLAB bit (LCR[7]) is cleared.";
+
+        field {
+            desc = "Programmable THRE Interrupt Mode Enable. Writeable only when THRE_MODE_USER == Enabled, always readable. This is used to enable/disable the generation of THRE Interrupt.";
+            hw = rw; 
+            sw = rw;
+            reset = 0x0;
+        } PTIME[7:7];
+
+        field {
+            desc = "IER 6to5 Reserved Bits read as zero(0)";
+            hw = r; sw = r;
+            reset = 0x0;
+        } RSVD_IER_6to5[6:5];
+
+        field { } ELCOLR[4:4];
+        field { } EDSSI[3:3];
+        field { } ELSI[2:2];
+        field { } ETBEI[1:1];
+        field { } ERBFI[0:0];
+    };
+
+    // reg DLH{
+    //     name = "Divisor Latch High";
+    // };
+
+    reg IIR{
+        name = "Interrupt Identification Register";
+
+        field {} FIFOSET[7:6];
+        field {} IID[3:0];
+    };
+
+    // reg FCR{
+    //     name = "FIFO Control Register";
+    // };
+
+    reg LCR{
+        name = "Line Control Register";
+
+        field {} DLAB[7:7];
+        field {} BC[6:6];
+        field {} SP[5:5];
+        field {} EPS[4:4];
+        field {} PEN[3:3];
+        field {} STOP[2:2];
+        field {} DLS[1:0];
+    };
+
+    reg MCR{
+        name = "Modem Control Register";
+
+        field {} SIRE[6:6];
+        field {} AFCE[5:5];
+        field {} LoopBack[4:4];
+        field {} OUT2[3:3];
+        field {} OUT1[2:2];
+        field {} RTS[1:1];
+        field {} DTR[0:0];
+    };
+
+    reg LSR{
+        name = "Line Status Register";
+
+        field {} ADDR_RCVD[8:8];
+        field {} RFE[7:7];
+        field {} TEMT[6:6];
+        field {} THRE[5:5];
+        field {} BI[4:4];
+        field {} FE[3:3];
+        field {} PE[2:2];
+        field {} OE[1:1];
+        field {} DR[0:0];
+    };
+
+    reg MSR{
+        name = "Modem Status Register";
+
+        field {} DCD[7:7];
+        field {} RI[6:6];
+        field {} DSR[5:5];
+        field {} CTS[4:4];
+        field {} DDCD[3:3];
+        field {} TERI[2:2];
+        field {} DDSR[1:1];
+        field {} DCTS[0:0];
+    };
+
+    reg SCR{
+        name = "Scratch Register";
+
+        field {} SCR[7:0];
+    };
+
+    reg LPDLL{
+        name = "Low Power Divisor Latch Low";
+
+        field {} LPDLL[7:0];
+    };
+
+    reg LPDLH{
+        name = "Low Power Divisor Latch High";
+
+        field {} LPDLH[7:0];
+    };
+
+    reg SRBRn{
+        name = "Shadow Receiver Buffer Register";
+
+        field {} SRBRn[7:0];
+    };
+
+    // reg STHRn{
+    //     name = "Shadow Transmitter Holding Register";
+    // };
+
+    reg FAR{
+        name = "FIFO Access Register";
+
+        field {} FAR[0:0];
+    };
+
+    reg TFR{
+        name = "Transmit FIFO Read Register";
+
+        field {} TFR[7:0];
+    };
+
+    reg RFW{
+        name = "Receive FIFO Write Register";
+
+        field {} RFFE[9:9];
+        field {} RFPE[8:8];
+        field {} RFWD[7:0];
+    };
+
+    reg USR{
+        name = "UART Status Register";
+
+        field {} RFF[4:4];
+        field {} RFNE[3:3];
+        field {} TFE[2:2];
+        field {} TFNF[1:1];
+        field {} BUSY[0:0];
+    };
+
+    reg TFL{
+        name = "Transmit FIFO Level Register";
+
+        field {} tfl[7:0];
+    };
+
+    reg RFL{
+        name = "Receive FIFO Level Register";
+        field {} rfl[7:0];
+    };
+
+    reg SRR{
+        name = "Software Reset Register";
+        field {} RFR[1:1];
+        field {} UR[0:0];
+    };
+
+    reg SRTS{
+        name = "Shadow Request to Send Register";
+        field {} SRTS[0:0];
+    };
+
+    reg SBCR{
+        name = "Shadow Break Control Register";
+        field {} SBCB[0:0];
+    };
+
+    reg SDMAM{
+        name = "Shadow DMA Mode Register";
+        field {} SDMAM[0:0];
+    };
+
+    reg SFE{
+        name = "Shadow FIFO Enable Register";
+        field {} SFE[0:0];
+    };
+
+    reg SRT{
+        name = "Shadow RCVR Trigger Register";
+        field {} SRT[1:0];
+    };
+
+    reg STET{
+        name = "Shadow TX Empty Trigger Register";
+        field {} STET[1:0];
+    };
+
+    reg HTX{
+        name = "Halt TX Register";
+        field {} HTX[0:0];
+    };
+
+    reg DMASA{
+        name = "DMA Software Acknowledge Register";
+        field {} DMASA[0:0];
+    };
+
+    reg TCR{
+        name = "Transceiver Control Register";
+        field {} XFER_MODE[4:3];
+        field {} DE_POL[2:2];
+        field {} RE_POL[1:1];
+        field {} RS485_EN[0:0];
+    };
+
+    reg DE_EN{
+        name = "Driver Output Enable Register";
+        field {} DE_Enable[0:0];
+    };
+
+    reg RE_EN{
+        name = "Receiver Output Enable Register";
+        field {} RE_Enable[0:0];
+    };
+
+    reg DET{
+        name = "Driver Output Enable Timing Register";
+        field {} DE_Deassertion_Time[23:16];
+        field {} DE_Assertion_Time[7:0];
+    };
+
+    reg TAT{
+        name = "Turn Around Timing Register";
+        field {} RE_to_DE[31:16];
+        field {} DE_to_RE[15:0];
+    };
+
+    reg DLF{
+        name = "Divisor Latch Fraction Register";
+        field {} DLF[3:0];
+    };
+
+    reg RAR{
+        name = "Receive Address Register";
+        field {} RAR[7:0];
+    };
+
+    reg TAR{
+        name = "Transmit Address Register";
+        field {} TAR[7:0];
+    };
+
+    reg LCR_EXT{
+        name = "Line Extended Control Register";
+        field {} TRANSMIT_MODE[3:3];
+        field {} SEND_ADDR[2:2];
+        field {} ADDR_MATCH[1:1];
+        field {} DLS_E[0:0];
+    };
+
+    reg UART_PROT_LEVEL{
+        name = "UART Protection Level Register";
+        field {} UART_PROT_LEVEL[2:0];
+    };
+
+    reg REG_TIMEOUT_RST{
+        name = "Register Timeout Counter Reset Value";
+        field {
+            desc = "TODO: reg width";
+        } REG_TIMEOUT_RST[7:0];
+    };
+
+    reg CPR{
+        name = "Component Parameter Register";
+        field {} FIFO_MODE[23:16];
+        field {} DMA_EXTRA[13:13];
+        field {} UART_ADD_ENCODED_PARAMS[12:12];
+        field {} SHADOW[11:11];
+        field {} FIFO_STAT[10:10];
+        field {} FIFO_ACCESS[9:9];
+        field {} ADDITIONAL_FEAT[8:8];
+        field {} SIR_LP_MODE[7:7];
+        field {} SIR_MODE[6:6];
+        field {} THRE_MODE[5:5];
+        field {} AFCE_MODE[4:4];
+        field {} APB_DATA_WIDTH[1:0];
+    };
+
+    reg UCV{
+        name = "UART Component Version Register";
+        field {} UART_Component_Version[31:0];
+    };
+
+    reg CTR{
+        name = "Component Type Register";
+        field {} Peripheral_ID[31:0];
+    };
+
+
+
+
+
+
+
+
+
     RBR  RBR   @ 0x00;
     // THR  THR   @ 0x00;
     // DLL  DLL   @ 0x00;
