@@ -32,31 +32,35 @@ iverilog -o sim systemverilog/lab1/arbiter.v systemverilog/lab1/tb1.v && vvp sim
 verilator -Wall --cc --exe systemverilog/lab2/tb1.sv
 ```
 
-## 学习建议
 
-- 先从 `systemverilog/lab0` 开始，逐步阅读并运行各 `lab` 的测试平台。
-- 对照 `systemRDL` 的示例，理解寄存器建模与硬件寄存器映射的关系。
-- UVM 示例从 `systemverilog/uvm1` 开始，聚焦基本类实例化、配置、测试结构。
 
-## 贡献指南
-
-- 欢迎提交 PR：
-  - 新增或优化学习示例（SystemRDL/SV/Verilog/UVM）
-  - 补充通用、可综合的 RTL 模块
-  - 集成合适的开源 IP（注明来源与许可证）
-- 请保持目录与文件命名清晰，测试平台可运行，并附简短说明。
-
-## 许可证
-
-- 当前未指定许可证；如需复用或开源集成，请在 PR 中注明拟用许可证并确保兼容性。
 
 ## 路线图
 
-- 增补常用可综合 RTL 模块库（FIFO、AXI-lite、定时器等）
-- 扩展 UVM 示例，覆盖序列、代理、环境、scoreboard 等
-- 引入适配的开源 IP 并增加最小可运行示例
+- [ ] 通用可综合 RTL 模块库：FIFO、AXI-Lite、定时器等
+- [ ] UVM 示例扩展：sequence/driver/monitor/env/scoreboard
+- [ ] 开源 IP 集成与最小可运行示例
+- [ ] SystemRDL → RTL 生成链路示例（PeakRDL 等）
+- [ ] 基础仿真脚本 / Makefile（简化编译与运行）
+- [ ] 每个 lab 简介与运行指南（简要 README）
+
+## TODO
+
+- [ ] 添加基础 RTL 模块：同步/异步 FIFO、计数器、定时器
+- [ ] 提供 AXI-Lite 从设备参考实现与测试平台
+- [ ] 增加 SystemRDL 到 RTL 生成演示（以 PeakRDL 为例）
+- [ ] 扩充 UVM 示例：factory/config_db、sequence 与 scoreboard 用法
+- [ ] 添加简单 CI（格式检查与仿真冒烟）
+- [ ] 引入合适的开源 IP 并提供最小可运行 tb
+- [ ] 增加 Makefile/脚本统一仿真入口
+
 
 ## 参考资料
 
 - Accellera SystemRDL： https://www.accellera.org/downloads/standards/systemrdl
+- PeakRDL： https://peakrdl.readthedocs.io/en/latest/index.html
 - Accellera UVM： https://www.accellera.org/downloads/standards/uvm
+
+## 许可证
+
+- 当前未指定许可证；如需复用或开源集成，请在 PR 中注明拟用许可证并确保兼容性。
