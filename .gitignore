@@ -7,11 +7,16 @@
 *.swp
 *.bkp
 
+##################
+# systemRDL ignores 
+##################
+systemRDL/*/*/*
+!systemRDL/*/*/*.rdl
 
-systemRDL/*/*
-!systemRDL/*/*.rdl
 
-
+##################
+# systemverilog ignores 
+##################
 systemverilog/*/*
 !systemverilog/*/*.v
 !systemverilog/*/*.sv
