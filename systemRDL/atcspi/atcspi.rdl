@@ -1,0 +1,616 @@
+reg IdRev{
+    name = "ID and Revision Register";
+
+    field {
+        desc = "ID number for ATCSPI200";
+        hw = r;
+        sw = r;
+        reset = 0x020020;
+    } ID[31:8];
+    field {
+        desc = "Major revision number";
+        hw = r;
+        sw = r;
+    } RevMajor[7:4];
+    field {
+        desc = "Minor revision number";
+        hw = r;
+        sw = r;
+    } RevMinor[3:0];
+};
+
+reg TransFmt{
+    name = "SPI Transfer Format Register";
+
+    field {
+        desc = "Address length in bytes. 0x0: 1 byte. 0x1: 2 bytes. 0x2: 3 bytes. 0x3: 4 bytes";
+    } AddrLen[17:16];
+
+    field{
+        desc = "The length of each data unit in bits. The actual bit number of a data unit is (DataLen + 1)";
+        hw = rw;
+        sw = rw;
+        reset = 0x7;
+    } DataLen[12:8];
+
+    field {
+        desc = "Enable Data Merge mode, which does automatic data  split on write and data coalescing on read.  This bit only takes effect when DataLen = 0x7.  Under Data Merge mode, each write to the Data  Register will transmit all fourbytes of the write data;  each read from the Data Register will retrieve four  bytes of received data as a single word data.  When Data Merge mode is disabled, only the least  (DataLen+1) significient bits of the Data Register  are valid for read/write operations; no automatic  data split/coalescing will be performed.";
+        hw = rw;
+        sw = rw;
+        reset = 0x1;
+    } DataMerge[7:7];
+
+    field {
+        desc = "Defines the data frame size for SPI transfersBi-directional MOSI in regular (single) mode  0x0: MOSI is uni-directional signal in regular mode.  0x1: MOSI is bi-directional signal in regular mode.  This bi-directional signal replaces the two";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MOSIBiDir[4:4];
+
+    field {
+        desc = "LSB First Select.  0x0: MSB first.  0x1: LSB first.Transfer data with the least significant bit first  0x0: Most significant bit first  0x1: Least significant bit first";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } LSB[3:3];
+
+    field {
+        desc = "SPI Master/Slave mode selection  0x0: Master mode  0x1: Slave mode  (Exist only when configuration  ATCSPI200_SLAVE_SUPPORT is defined)";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SlvMode[2:2];
+
+    field {
+        desc = "SPI Clock Polarity  0x0: SCLK is LOW in the idle states  0x1: SCLK is HIGH in the idle states";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } CPOL[1:1];
+
+    field {
+        desc = "SPI Clock Phase  0x0: Sampling data at odd SCLK edges  0x1: Sampling data at even SCLK edges";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } CPHA[0:0];
+};
+
+reg DirectIO{
+    name = "SPI Direct I/O Control Register";
+    desc = "This register enables the direct control of the SPI interface signals. The register is valid only  when the configuration ATCSPI200_DIRECT_IO_SUPPORT is defined.";
+
+    field {
+        desc = "Enable Direct IO  0x0: Disable  0x1: Enable";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } DirectIOEn[24:24];
+
+    field {
+        desc = "Output enable for the SPI Flash hold signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } HOLD_OE[21:21];
+
+    field {
+        desc = "Output enable for the SPI Flash write protect signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } WP_OE[20:20];
+
+    field {
+        desc = "Output enable fo the SPI MISO signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MISO_OE[19:19];
+
+    field {
+        desc = "Output enable for the SPI MOSI signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MOSI_OE[18:18];
+
+    field {
+        desc = "Output enable for the SPI SCLK signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SCLK_OE[17:17];
+
+    field {
+        desc = "Output enable for SPI CS (chip select) signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } CS_OE[16:16];
+
+    field {
+        desc = "Output value for the SPI Flash hold signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x1;
+    } HOLD_O[13:13];
+
+    field {
+        desc = "Output value for the SPI Flash write protect signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x1;
+    } WP_O[12:12];
+
+    field {
+        desc = "Output value for the SPI MISO signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MISO_O[11:11];
+
+    field {
+        desc = "Output value for the SPI MOSI signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MOSI_O[10:10];
+
+    field {
+        desc = "Output value for the SPI SCLK signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SCLK_O[9:9];
+
+    field {
+        desc = "Output value for the SPI CS (chip select) signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x1;
+    } CS_O[8:8];
+
+    field {
+        desc = "Status of the SPI Flash hold signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } HOLD_I[5:5];
+
+    field {
+        desc = "Status of the SPI Flash write protect signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } WP_I[4:4];
+
+    field {
+        desc = "Status of the SPI MISO signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MISO_I[3:3];
+
+    field {
+        desc = "Status of the SPI MOSI signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MOSI_I[2:2];
+
+    field {
+        desc = "Status of the SPI SCLK signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SCLK_I[1:1];
+
+    field {
+        desc = "Status of the SPI CS (chip select) signal";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } CS_I[0:0];
+
+};
+
+reg TransCtrl{
+    name = "SPI Transfer Control Register";
+    desc = "This register controls aspects of SPI transfers.";
+
+    field {
+        desc = "Data-only mode (slave mode only)  0x0: Disable the data-only mode  0x1: Enable the data-only mode  Note: This mode only works in the uni-directional  regular (single) mode so MOSIBiDir, DualQuad  and TransMode should be set to 0.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SlvDataOnly[31:31];
+
+    field {
+        desc = "SPI command phase enable (Master mode only)  0x0: Disable the command phase  0x1: Enable the command phase";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } CmdEn[30:30];
+
+    field {
+        desc = "SPI address phase enable (Master mode only)  0x0: Disable the address phase  0x1: Enable the address phase";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } AddrEn[29:29];
+
+    field {
+        desc = "SPI address phase format (Master mode only)  0x0: Address phase is the regular (single) mode  0x1: The format of the address phase is the same as  the data phase (DualQuad).";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } AddrFmt[28:28];
+
+    field {
+        desc = "Transfer mode  The transfer sequence could be  0x0: Write and read at the same time  0x1: Write only  0x2: Read only  0x3: Write, Read  0x4: Read, Write  0x5: Write, Dummy, Read  0x6: Read, Dummy, Write  0x7: None Data (must enable CmdEn or AddrEn in  master mode)  0x8: Dummy, Write  0x9: Dummy, Read  0xa~0xf: Reserved";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TransMode[27:24];
+
+    field {
+        desc = "SPI data phase format  0x0: Regular (Single) mode  0x1: Dual I/O mode  0x2: Quad I/O mode  0x3: Reserved";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } DualQuad[23:22];
+
+    field {
+        desc = "Token transfer enable (Master mode only)  Append an one-byte special token following the  address phase for SPI read transfers. The value of the  special token should be selected in TokenValue.  0x0: Disable the one-byte special token  0x1: Enable the one-byte special token";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TokenEn[21:21];
+
+    field {
+        desc = "Transfer count for write data  WrTranCnt indicates the number of units of data to  be transmitted to the SPI bus from the Data Register.  The actual transfer count is (WrTranCnt+1).  WrTranCnt only takes effect when TransMode is 0,  1, 3, 4, 5, 6 or 8.  The size (bit-width) of a data unit is defined by the  DataLen field of the Transfer Format Register.  For TransMode 0, WrTranCnt must be equal to  RdTranCnt.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } WrTranCnt[20:12];
+
+    field {
+        desc = "Token value (Master mode only)  The value of the one-byte special token following the  address phase for SPI read transfers.  0x0: token value = 0x00  0x1: token value = 0x69";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TokenValue[11:11];
+
+    field {
+        desc = "Dummy data count. The actual dummy count is  (DummyCnt +1).  The number of dummy cycles on the SPI interface  will be (DummyCnt+1)* ((DataLen+1)/SPI IO width)";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } DummyCnt[10:9];
+
+    field {
+        desc = "Transfer count for read data  RdTranCnt indicates the number of units of data to  be received from the SPI bus to the Data Register.  The actual transfer count is (RdTranCnt+1).  RdTranCnt only takes effect when TransMode is 0,  2, 3, 4, 5, 6 or 9.  The size (bit-width) of a data unit is defined by the  DataLen field of the Transfer Format Register.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } RdTranCnt[8:0];
+};
+
+reg Cmd{
+    name = "SPI Command Register";
+    desc = "Writing operations on this register will trigger SPI transfers. This register must be written with a  dummy value to start a SPI transfer even when the command phase is not enabled. When the  ATCSPI200 controller is programmed to the slave mode, the command field of the last received  SPI transaction is stored in this SPI Command Register.";
+    field {
+        desc = "SPI command opcode written for command phase (8-bit)";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } CmdCode[7:0];
+};
+
+reg Addr{
+    name = "SPI Address Register";
+    field {
+        desc = "SPI address value used in address phase; effective width selected by TransFmt.AddrLen";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } Address[31:0];
+};
+
+reg Data{
+    name = "SPI Data Register";
+    field {
+        desc = "Data port for TX/RX FIFO access; semantics depend on TransFmt.DataLen and DataMerge";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } DataWord[31:0];
+};
+
+reg Ctrl{
+    name = "SPI Control Register";
+    field {
+        desc = "Transmit (TX) FIFO Threshold  The TXFIFOInt interrupt or DMA request would be  issued to replenish the TX FIFO when the TX data  count is less than or equal to the TX FIFO threshold.TX FIFO threshold level";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TXTHRES[23:16];
+
+    field {
+        desc = "RX FIFO threshold levelReceive (RX) FIFO Threshold  The RXFIFOInt interrupt or DMA request would be  issued for consuming the RX FIFO when the RX data  count is more than or equal to the RX FIFO threshold.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } RXTHRES[15:8];
+
+    field {
+        desc = "Enable TX DMA";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TXDMAEN[4:4];
+
+    field {
+        desc = "Enable RX DMA";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } RXDMAEN[3:3];
+
+    field {
+        desc = "Transmit FIFO reset  Write 1 to reset. It is automatically cleared to 0 after  the reset operation completes.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TXFIFORST[2:2];
+
+    field {
+        desc = "Receive FIFO reset  Write 1 to reset. It is automatically cleared to 0 after  the reset operation completes.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } RXFRST[1:1];
+
+    field {
+        desc = "SPI reset  Write 1 to reset. It is automatically cleared to 0 after  the reset operation completes.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SPIRST[0:0];
+};
+
+reg Status{
+    name = "SPI Status Register";
+
+    field {
+        desc = "Number of valid entries in the Transmit FIFO";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } TXNUM_7_6[29:28];
+
+    field {
+        desc = "Number of valid entries in the Receive FIFO";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } RXNUM_7_6[25:24];
+
+    field {
+        desc = "Transmit FIFO Full flag";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } TXFULL[23:23];
+
+    field {
+        desc = "Transmit FIFO Empty flag";
+        hw = r;
+        sw = r;
+        reset = 0x1;
+    } TXEMPTY[22:22];
+
+    field {
+        desc = "TX FIFO valid entries";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } TXNUM_5_0[20:16];
+
+    field {
+        desc = "Receive FIFO Full flag";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } RXFULL[15:15];
+
+    field {
+        desc = "Receive FIFO empty flag";
+        hw = r;
+        sw = r;
+        reset = 0x1;
+    } RXEMPTY[14:14];
+
+    field {
+        desc = "Number of valid entries in the Receive FIFO";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } RXNUM_5_0[13:8];
+
+
+    field {
+        desc = "SPI register programming is in progress.SPI busy";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } SPIActive[0:0];
+};
+
+reg IntrEn{
+    name = "SPI Interrupt Enable Register";
+
+    field {
+        desc = "Enable the Slave Command Interrupt.  Control whether interrupts are triggered whenever  slave commands are received.  (Slave mode only)";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SlvCmdEn[5:5];
+
+    field {
+        desc = "Enable the End of SPI Transfer interrupt.  Control whether interrupts are triggered when SPI  transfers end.  (In slave mode, end of read status transaction doesn’t  trigger this interrupt.)";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } EndIntEn[4:4];
+
+    field {
+        desc = "Enable the SPI Transmit FIFO Threshold interrupt.  Control whether interrupts are triggered when the  valid entries are less than or equal to the TX FIFO  threshold.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TXFIFOIntEn[3:3];
+
+    field {
+        desc = "Enable the SPI Receive FIFO Threshold interrupt.  Control whether interrupts are triggered when the  valid entries are greater than or equal to the RX FIFO  threshold.";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } RXFIFOIntEn[2:2];
+
+    field {
+        desc = "Enable the SPI Transmit FIFO Underrun interrupt.  Control whether interrupts are triggered when the  Transmit FIFO run out of data.  (Slave mode only)";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TXFIFOURIntEn[1:1];
+
+    field {
+        desc = "Enable the SPI Receive FIFO Overrun interrupt.  Control whether interrupts are triggered when the  Receive FIFO overflows.  (Slave mode only)";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } RXFIFOORIntEn[0:0];
+
+};
+
+reg IntrSt{
+    name = "SPI Interrupt Status Register";
+    field {
+        desc = "Interrupt status: TX FIFO full";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TXFFLIS[23:23];
+
+    field {
+        desc = "Interrupt status: TX FIFO empty";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } TXEPTYIS[22:22];
+
+    field {
+        desc = "Interrupt status: RX FIFO empty";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } RXFEMIS[14:14];
+
+    field {
+        desc = "Interrupt status: SPI busy";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } SPIBSYIS[0:0];
+};
+
+reg Timing{
+    name = "SPI Interface Timing Register";
+    field {
+        desc = "SCLK divider setting";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } ClkDiv[7:0];
+};
+
+reg MemCtrl{
+    name = "SPI Memory Access Control Register";
+    field {
+        desc = "Enable memory-mapped I/O mode";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MemIOEn[0:0];
+
+    field {
+        desc = "Stop ongoing memory-mapped access";
+        hw = rw;
+        sw = rw;
+        reset = 0x0;
+    } MemStop[1:1];
+};
+
+reg SlvStatus{
+    name = "SPI Slave Status Register.(Present only when ATCSPI200_SLAVE_SUPPORT is defined)";
+    field {
+        desc = "Slave active status";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } SlvActive[0:0];
+};
+
+
+reg SlvDataCnt{
+    name = "SPI Slave Data Count Register.Present only when ATCSPI200_SLAVE_SUPPORT is defined";
+    field {
+        desc = "TX data count in slave mode";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } TXNUM[14:8];
+
+    field {
+        desc = "RX data count in slave mode";
+        hw = r;
+        sw = r;
+        reset = 0x0;
+    } RXNUM[6:0];
+};
+
+reg Config{
+    name = "Configuration Register";
+    field {
+        desc = "Number of chip selects supported";
+        hw = r;
+        sw = r;
+        reset = 0x1;
+    } CSNum[3:0];
+};
+
+
+addrmap atcspi {
+    default regwidth = 32 ;
+    default sw = rw ;
+    default hw = rw ;
+
+    IdRev         IdRev        @ 0x00 ;
+    TransFmt      TransFmt     @ 0x10 ;
+    DirectIO      DirectIO     @ 0x14 ;
+    TransCtrl     TransCtrl    @ 0x20 ;
+    Cmd           Cmd          @ 0x24 ;
+    Addr          Addr         @ 0x28 ;
+    Data          Data         @ 0x2C ;
+    Ctrl          Ctrl         @ 0x30 ;
+    Status        Status       @ 0x34 ;
+    IntrEn        IntrEn       @ 0x38 ;
+    IntrSt        IntrSt       @ 0x3C ;
+    Timing        Timing       @ 0x40 ;
+    MemCtrl       MemCtrl      @ 0x50 ;
+    SlvStatus     SlvStatus    @ 0x60 ;
+    SlvDataCnt    SlvDataCnt   @ 0x64 ;
+    Config        Config       @ 0x7C ;
+};

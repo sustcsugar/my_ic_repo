@@ -1,0 +1,224 @@
+package my_pkg1;
+
+    class chnl_trans;
+        rand bit [31:0] data[];
+        rand int ch_id;
+        rand int pkt_id;
+        rand int data_nidles;
+        rand int pkt_nidles;
+        bit rsp;
+
+        // TODO:why use static variable here?
+        local static int obj_id = 0;
+
+        constraint cons{
+            data.size inside {[4:8]};
+            foreach(data[i]) data[i] == 'hC000_0000 + (this.ch_id<<24) + (this.pkt_id<<8) + i;
+            soft ch_id == 0;
+            soft pkt_id == 0;
+            data_nidles inside {[0:2]};
+            pkt_nidles inside {[1:10]};
+        };
+
+        // TODO:why use static variable here?
+        function new();
+            this.obj_id++;
+        endfunction
+
+        // TODO: what is purpose of clone function?
+        function chnl_trans clone();
+            chnl_trans c = new();
+            c.data = this.data;
+            c.ch_id = this.ch_id;
+            c.pkt_id = this.pkt_id;
+            c.data_nidles = this.data_nidles;
+            c.pkt_nidles = this.pkt_nidles;
+            c.rsp = this.rsp;
+            return c;
+        endfunction
+
+        function string sprint();
+            string s;
+            s = {s, $sformatf("=======================================\n")};
+            s = {s, $sformatf("chnl_trans object content is as below: \n")};
+            s = {s, $sformatf("obj_id = %0d: \n", this.obj_id)};
+            foreach(data[i]) s = {s, $sformatf("data[%0d] = %8x \n", i, this.data[i])};
+            s = {s, $sformatf("ch_id = %0d: \n", this.ch_id)};
+            s = {s, $sformatf("pkt_id = %0d: \  n", this.pkt_id)};
+            s = {s, $sformatf("data_nidles = %0d: \n", this.data_nidles)};
+            s = {s, $sformatf("pkt_nidles = %0d: \n", this.pkt_nidles)};
+            s = {s, $sformatf("rsp = %0d: \n", this.rsp)};
+            s = {s, $sformatf("=======================================\n")};
+            return s;
+        endfunction
+
+    endclass : chnl_trans
+
+
+    class chnl_initiator;
+        local string name;
+        local virtual chnl_intf intf;
+        mailbox #(chnl_trans) req_mb;
+        mailbox #(chnl_trans) rsp_mb;
+
+        function new(string name = "chnl_initiator");
+            this.name = name;
+        endfunction
+
+        function void set_name(string s);
+            this.name = s;
+        endfunction
+
+        function void set_interface(virtual chnl_intf intf);
+            if(intf == null)
+                $error("interface handle is NULL, please check if target interface has been intantiated");
+            else
+                this.intf = intf;
+        endfunction
+
+        task run();
+            this.drive();
+        endtask
+
+        task drive();
+            chnl_trans req,rsp;
+            @(posedge intf.rstn);
+            forever begin
+                this.req_mb.get(req);
+                this.chnl_write(req);
+                rsp = req.clone();
+                rsp.rsp = 1;
+                this.rsp_mb.put(rsp);
+            end
+        endtask
+
+        task chnl_write(input chnl_trans t);
+            foreach(t.data[i]) begin
+                @(posedge intf.clk);
+                intf.drv_ck.ch_valid <= 1;
+                intf.drv_ck.ch_data  <= t.data[i];
+                wait(intf.ch_ready === 'b1);
+                $display("%t channel initiator [%s] sent data %x", $time, name, t.data[i]);
+                repeat(t.data_nidles) chnl_idle();
+            end
+            repeat(t.pkt_nidles) chnl_idle();
+        endtask
+
+        task chnl_idle();
+            @(posedge intf.clk);
+            intf.drv_ck.ch_valid <= 0;
+            intf.drv_ck.ch_data  <= 0;
+        endtask
+
+    endclass: chnl_initiator
+
+
+    class chnl_generator;
+        int pkt_id;
+        int ch_id;
+        int ntrans;
+        int data_nidles;
+
+        mailbox #(chnl_trans ) req_mb;
+        mailbox #(chnl_trans ) rsp_mb;
+
+        function new(int ch_id, int ntrans);
+            this.ch_id = ch_id;
+            this.pkt_id = 0;
+            this.ntrans = ntrans;
+            this.req_mb = new();
+            this.rsp_mb = new();
+        endfunction
+
+        task run();
+            repeat(ntrans) send_trans();
+        endtask
+
+        task send_trans();
+            chnl_trans req,rsp;
+            req = new();
+
+            assert(req.randomize with {ch_id == local::ch_id; pkt_id == local::pkt_id;} )
+            else $fatal("[RNDFAIL] channel packet randomization failure!");
+
+            this.pkt_id++;
+
+            $display(req.sprint());
+            this.req_mb.put(req);
+
+            this.rsp_mb.get(rsp);
+            $display(rsp.sprint());
+
+            assert(rsp.rsp) else $error("[RSPERR] %0t response error", $time);
+        endtask
+
+    endclass : chnl_generator
+
+
+    class chnl_agent;
+        chnl_generator gen;
+        chnl_initiator init;
+        local virtual chnl_intf vif;
+
+        function new(string name = "chnl_agent", int id = 0, int ntrans = 1);
+            this.gen = new(id, ntrans);
+            this.init = new(name);
+        endfunction
+
+        function void set_interface(virtual chnl_intf vif);
+            this.vif = vif;
+            init.set_interface(vif);
+        endfunction
+
+        task run();
+            this.init.req_mb = this.gen.req_mb;
+            this.init.rsp_mb = this.gen.rsp_mb;
+            fork
+                gen.run();
+                init.run();
+            join_any
+        endtask
+
+    endclass: chnl_agent
+
+
+    class chnl_root_test;
+        chnl_agent agent[3];
+        protected string name;
+
+        function new(int ntrans = 100, string name = "chnl_root_test");
+            this.name = name;
+            foreach(agent[i]) begin
+                this.agent[i] = new($sformatf("chnl_agent%0d",i),i,ntrans);
+            end
+            $display("%s instantiate objects",this.name);
+        endfunction
+
+        function void set_interface(virtual chnl_intf ch0_vif,
+                                    virtual chnl_intf ch1_vif,
+                                    virtual chnl_intf ch2_vif);
+            agent[0].set_interface(ch0_vif);
+            agent[1].set_interface(ch1_vif);
+            agent[2].set_interface(ch2_vif);
+        endfunction 
+
+        task run();
+            $display($sformatf("*****************%s started********************", this.name));
+            fork
+                agent[0].run();
+                agent[1].run();
+                agent[2].run();
+            join
+            $display($sformatf("*****************%s finished********************", this.name));
+            $finish();
+        endtask
+    endclass: chnl_root_test
+
+    class chnl_basic_test extends chnl_root_test;
+        function new(int ntrans = 200, string name = "chnl_basic_test");
+            super.new(ntrans, name);
+        endfunction
+    endclass: chnl_basic_test
+
+
+endpackage

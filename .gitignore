@@ -1,0 +1,21 @@
+##################
+# common ignores #
+##################
+*.log
+*.tmp
+*.bak
+*.swp
+*.bkp
+
+
+systemRDL/*/*
+!systemRDL/*/*.rdl
+
+
+systemverilog/*/*
+!systemverilog/*/*.v
+!systemverilog/*/*.sv
+!systemverilog/*/*.png
+!systemverilog/*/*.jpg
+!systemverilog/*/*.jpeg
+!systemverilog/*/*.drawio

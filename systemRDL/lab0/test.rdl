@@ -1,0 +1,76 @@
+
+// 定义控制寄存器的位域
+reg control_reg {
+    name = "Control Register";
+
+    field {
+        sw = rw;        // 软件可读写
+        hw = na;        // 硬件不可访问
+        reset = 0;      // 复位值为0
+        desc = "Controls the enable state of the module";
+    } enable [0:0];        // 使能位 [bit 0]
+
+    field {
+        sw = rw;
+        reset = 0;
+        desc = "Selects the operating mode of the module";
+    } mode[2:1];       // 模式选择位 [bit 2:1]，宽度2位
+};
+
+// 定义状态寄存器
+reg status_reg {
+
+    name = "Status Register";
+    field {
+        sw = r;         // 软件只读
+        hw = w;         // 硬件可写
+        reset = 0;
+        desc = "Indicates whether the module is ready";
+    } ready [0:0];         // 就绪标志 [bit 0]
+
+    field {
+        sw = r;
+        reset = 0;
+        desc = "Counts the number of errors occurred";
+    } error_count[7:1]; // 错误计数 [bit 7:1]，宽度7位
+} ;
+
+// 定义顶层地址空间
+addrmap top {
+    default regwidth = 32;    // 寄存器位宽=32位
+    default sw = rw;         // 软件默认读写
+    default hw = r;          // 硬件默认只读
+    // 实例化寄存器
+    // 使用之前定义的寄存器类型
+    control_reg CTRL @0x0;
+    status_reg STATUS @0x4;
+
+    // 定义一个包含32位数据字段的数组寄存器
+    reg {
+        name = "Data Buffer Register 1";
+        field { 
+            sw = rw;
+        } data[31:0]; // 32位数据字段
+    } buffer1 @0x8;                  // 数组起始地址：0x8
+
+    reg {
+        name = "Data Buffer Register 2";
+        field { 
+            sw = rw;
+        } data[31:0]; // 32位数据字段
+    } buffer2 @0xc;                  // 数组起始地址：0x8
+
+    reg {
+        name = "Data Buffer Register 3";
+        field { 
+            sw = rw;
+        } data[31:0]; // 32位数据字段
+    } buffer3 @0x10;                  // 数组起始地址：0x8
+
+    reg {
+        name = "Data Buffer Register 4";
+        field { 
+            sw = rw;
+        } data[31:0]; // 32位数据字段
+    } buffer4 @0x14;                  // 数组起始地址：0x8
+};
