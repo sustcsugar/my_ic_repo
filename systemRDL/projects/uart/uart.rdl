@@ -14,11 +14,33 @@ addrmap UART_ADDRMAP{
         desc = "This register can be accessed only when the DLAB bit (LCR[7]) is cleared.";
 
         field {
-            desc = "This register contains the data byte received on the serial input port (sin) in UART mode or the serial infrared input (sir_in) in infrared mode. The data in this register is valid only if the Data Ready (DR) bit in the Line status Register (LSR) is set.";
+            desc = "This register contains the data byte received on the serial input port (sin) in UART mode 
+                    or the serial infrared input (sir_in) in infrared mode. The data in this register is valid 
+                    only if the Data Ready (DR) bit in the Line status Register (LSR) is set.";
             hw = r;
             sw = r;
             reset = 0x0;
         } RBR[7:0];
+    };
+
+
+    reg THR{
+        name = "Transmitter Holding Register";
+        desc = "This register can be accessed only when the DLAB bit (LCR[7]) is cleared.";
+
+        field {
+            desc = "This register contains data to be transmitted on the serial output port (sout) in UART mode 
+                    or the serial infrared output (sir_out_n) in infrared mode. Data should only be written to the THR 
+                    when the THR Empty (THRE) bit (LSR[5]) is set.  If in non-FIFO mode or FIFO's are disabled (FCR[0] set to zero) 
+                    and THRE is set, writing a single character to the THR clears the THRE. 
+                    Any additional writes to the THR before the THRE is set again causes the THR data to be overwritten. 
+                    If in FIFO mode and FIFO's are enabled (FCR[0] set to one) and THRE is set, x number of characters of 
+                    data may be written to the THR before the FIFO is full. The number x (default=16) is determined by 
+                    the value of FIFO Depth that is set during configuration. Any attempt to write data.
+                    ";
+            hw = rw;
+            sw = rw;
+        } THR[7:0];
     };
 
 
@@ -27,7 +49,9 @@ addrmap UART_ADDRMAP{
         desc = "This register can be accessed only when the DLAB bit (LCR[7]) is cleared.";
 
         field {
-            desc = "Programmable THRE Interrupt Mode Enable. Writeable only when THRE_MODE_USER == Enabled, always readable. This is used to enable/disable the generation of THRE Interrupt.";
+            desc = "Programmable THRE Interrupt Mode Enable. 
+                    Writeable only when THRE_MODE_USER == Enabled, always readable. 
+                    This is used to enable/disable the generation of THRE Interrupt.";
             hw = rw; 
             sw = rw;
             reset = 0x0;
