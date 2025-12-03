@@ -1,66 +1,83 @@
-# SystemRDL & SystemVerilog 学习仓库
+# IC 设计学习代码库
 
-一个面向芯片设计学习的代码与笔记仓库，包含：
-- SystemRDL 寄存器建模示例与练习
-- SystemVerilog/Verilog 学习代码与测试平台
-- UVM 学习示例（位于 `systemverilog/uvm1/` 等）
-- 计划新增：常用、通用、可综合的 RTL 设计模块
-- 可能集成：部分开源 IP 模块
+![SystemRDL](https://img.shields.io/badge/SystemRDL-2.0-blue?style=flat-square)
+![SystemVerilog](https://img.shields.io/badge/SystemVerilog-IEEE_1800-green?style=flat-square)
+![UVM](https://img.shields.io/badge/UVM-1.2-orange?style=flat-square)
+![Verilog](https://img.shields.io/badge/Verilog-IEEE_1364-lightgrey?style=flat-square)
 
-## 目录结构
+> 渐进式芯片设计学习路径，涵盖寄存器建模、RTL 设计与验证方法学
+
+本仓库提供从入门到进阶的 IC 设计学习资源，包括 **SystemRDL 寄存器建模**、**SystemVerilog/Verilog 设计与验证**、**UVM 验证方法学**三大模块。通过实战案例和渐进式练习，帮助掌握现代芯片设计与验证技术。
+
+## 📂 目录结构
 
 ```
-systemRDL/        # SystemRDL 学习示例与练习
-systemverilog/    # SV/Verilog 学习代码、测试平台与 UVM 示例
-  ├─ lab0..lab4   # 分阶段实验与示例（含若干 tb*.sv/.v）
-  └─ uvm1/        # UVM 基础用法示例
+systemRDL/
+├── labs/
+│   ├── lab0/          # 基础寄存器定义与字段属性
+│   └── lab1/          # 高级特性：枚举、数组、文档生成
+└── projects/
+    ├── atcspi/        # ATCSPI200 SPI 控制器寄存器完整定义
+    └── uart/          # UART 寄存器地址映射与 UVM 模型
+
+systemverilog/
+├── lab0/              # Verilog 基础：MCDT 设计与简单测试
+├── lab1/              # SystemVerilog 语法：logic 类型与可配置 task
+├── lab2/              # Interface 与 Clocking Block
+├── lab3/              # OOP 验证架构：类封装、约束随机、mailbox
+├── lab4/              # 完整验证环境：参考模型、寄存器验证、多 package
+└── uvm1/              # UVM 入门：组件实例化、配置数据库、测试运行
 ```
 
-## 快速开始
+## 🚀 快速开始
 
-- 克隆仓库后，浏览对应目录中的 `*.sv`/`*.v`/`*.rdl` 文件与注释。
-- 使用你熟悉的 EDA/仿真工具（如 Verilator、VCS、Questa、Icarus Verilog 等）进行本地仿真。
-- 典型做法：选择某个 `labX` 下的 `tb*.sv/.v` 作为顶层测试平台进行编译与运行。
+### SystemRDL 工具链
 
-示例（以 Icarus Verilog/Verilator 为参考，按需调整）：
+使用 [PeakRDL](https://peakrdl.readthedocs.io/) 生成文档、C 头文件、 UVM 寄存器模型和 regblock ：
 
 ```bash
-# Verilog 示例（Icarus Verilog）
-iverilog -o sim systemverilog/lab1/arbiter.v systemverilog/lab1/tb1.v && vvp sim
+# 生成 HTML 文档
+peakrdl html systemRDL/labs/lab0/test.rdl -o output/html/
 
-# SystemVerilog 示例（Verilator）
-verilator -Wall --cc --exe systemverilog/lab2/tb1.sv
+# 生成 C 头文件
+peakrdl c-header systemRDL/projects/uart/uart.rdl -o e902_uart.h
+
+# 生成 UVM 寄存器模型
+peakrdl uvm systemRDL/projects/atcspi/atcspi.rdl -o uvm_atcspi_pkg.sv
+
+# 生成 regblock
+peakrdl regblock systemRDL/projects/atcspi/atcspi.rdl -o regblock/ --cpuif apb3-flat
 ```
 
+### SystemVerilog 仿真
 
+使用常见 EDA 工具运行测试平台：
 
+```bash
+# lab3 - OOP 验证环境（指定测试用例）
+vcs -sverilog systemverilog/lab3/tb3.sv +TESTNAME=chnl_burst_test
 
-## 路线图
+# lab4 - 完整验证环境
+vcs -sverilog systemverilog/lab4/tb.sv -full64 +v2k
+```
 
-- [ ] 通用可综合 RTL 模块库：FIFO、AXI-Lite、定时器等
-- [ ] UVM 示例扩展：sequence/driver/monitor/env/scoreboard
-- [ ] 开源 IP 集成与最小可运行示例
-- [ ] SystemRDL → RTL 生成链路示例（PeakRDL 等）
-- [ ] 基础仿真脚本 / Makefile（简化编译与运行）
-- [ ] 每个 lab 简介与运行指南（简要 README）
+## 📖 学习路线
 
-## TODO
+| 模块 | 实验 | 技术要点 | 适合人群 |
+|------|------|----------|----------|
+| **SystemRDL** | lab0 | 基础语法、字段属性、地址映射 | 初学者 |
+| | lab1 | 枚举、regfile 数组、Markdown 文档 | 进阶 |
+| | projects | 真实 IP 寄存器定义、自动化生成 | 实战 |
+| **SystemVerilog** | lab0 | Verilog 基础、MCDT 设计 | 初学者 |
+| | lab1 | SV 语法、logic 类型、参数化 task | 入门 SV |
+| | lab2 | Interface、Clocking Block、模块化 | 进阶 |
+| | lab3 | OOP 架构、约束随机、mailbox 通信 | 验证工程师 |
+| | lab4 | 参考模型、寄存器验证、多 package | 高级验证 |
+| **UVM** | uvm1 | 组件实例化、config_db、测试运行 | UVM 入门 |
 
-- [ ] 添加基础 RTL 模块：同步/异步 FIFO、计数器、定时器
-- [ ] 提供 AXI-Lite 从设备参考实现与测试平台
-- [ ] 增加 SystemRDL 到 RTL 生成演示（以 PeakRDL 为例）
-- [ ] 扩充 UVM 示例：factory/config_db、sequence 与 scoreboard 用法
-- [ ] 添加简单 CI（格式检查与仿真冒烟）
-- [ ] 引入合适的开源 IP 并提供最小可运行 tb
-- [ ] 增加 Makefile/脚本统一仿真入口
+## 🔗 参考资料
 
-
-## 参考资料
-
-- Accellera SystemRDL： https://www.accellera.org/downloads/standards/systemrdl
-- PeakRDL： https://peakrdl.readthedocs.io/en/latest/index.html
-- Accellera UVM： https://www.accellera.org/downloads/standards/uvm
-
-## 许可证
-
-- 当前未指定许可证；如需复用或开源集成，请在 PR 中注明拟用许可证并确保兼容性。
+- [SystemRDL 2.0 规范](https://www.accellera.org/downloads/standards/systemrdl) - Accellera 官方标准文档
+- [PeakRDL 工具套件](https://peakrdl.readthedocs.io/) - 开源 SystemRDL 编译器与生成器
+- [UVM 1.2 用户指南](https://www.accellera.org/downloads/standards/uvm) - 通用验证方法学标准
+- [SystemVerilog IEEE 1800](https://ieeexplore.ieee.org/document/8299595) - IEEE 官方语言标准
