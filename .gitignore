@@ -17,10 +17,12 @@ systemRDL/*/*/*
 ##################
 # systemverilog ignores 
 ##################
-systemverilog/*/*
-!systemverilog/*/*.v
-!systemverilog/*/*.sv
-!systemverilog/*/*.png
-!systemverilog/*/*.jpg
-!systemverilog/*/*.jpeg
-!systemverilog/*/*.drawio
+systemverilog/*/*/*
+!systemverilog/*/*/*.v
+!systemverilog/*/*/*.vh
+!systemverilog/*/*/*.sv
+!systemverilog/*/*/*.svh
+!systemverilog/*/*/*.png
+!systemverilog/*/*/*.jpg
+!systemverilog/*/*/*.jpeg
+!systemverilog/*/*/*.drawio
