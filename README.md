@@ -21,12 +21,15 @@ systemRDL/
     └── uart/          # UART 寄存器地址映射与 UVM 模型
 
 systemverilog/
-├── lab0/              # Verilog 基础：MCDT 设计与简单测试
-├── lab1/              # SystemVerilog 语法：logic 类型与可配置 task
-├── lab2/              # Interface 与 Clocking Block
-├── lab3/              # OOP 验证架构：类封装、约束随机、mailbox
-├── lab4/              # 完整验证环境：参考模型、寄存器验证、多 package
-└── uvm1/              # UVM 入门：组件实例化、配置数据库、测试运行
+├── svlab/
+│   ├── lab0/          # Verilog 基础：MCDT 设计与简单测试
+│   ├── lab1/          # SystemVerilog 语法：logic 类型与可配置 task
+│   ├── lab2/          # Interface 与 Clocking Block
+│   ├── lab3/          # OOP 验证架构：类封装、约束随机、mailbox
+│   └── lab4/          # 完整验证环境：参考模型、寄存器验证、多 package
+└── uvmlab/
+    ├── uvmlab1/       # UVM 入门：组件实例化、config_db、测试运行
+    └── uvmlab2/       # UVM 进阶实验
 ```
 
 ## 🚀 快速开始
@@ -55,10 +58,10 @@ peakrdl regblock systemRDL/projects/atcspi/atcspi.rdl -o regblock/ --cpuif apb3-
 
 ```bash
 # lab3 - OOP 验证环境（指定测试用例）
-vcs -sverilog systemverilog/lab3/tb3.sv +TESTNAME=chnl_burst_test
+vcs -sverilog systemverilog/svlab/lab3/tb3.sv +TESTNAME=chnl_burst_test
 
 # lab4 - 完整验证环境
-vcs -sverilog systemverilog/lab4/tb.sv -full64 +v2k
+vcs -sverilog systemverilog/svlab/lab4/tb.sv -full64 +v2k
 ```
 
 ## 📖 学习路线
